@@ -28,3 +28,23 @@ The 'Interactions' dataframe contains 731927 rows and 5 columns. Here are the re
 | 'review'| Comment made by the user about the recipe |
 
 The 'Interactions' dataframe has more observations because there are multiple ratings per recipe. Some recipes don't contain any ratings.
+
+## Data Cleaning and Exploratory Data Analysis
+To make the data easier to read and use, we merged the two datasets.
+'''py
+merged_data = recipes.merge(ratings, left_on='id', right_on='recipe_id', how='left')
+merged_data['rating'] = merged_data['rating'].replace(0.0, np.nan)
+'''
+
+## Assessment of Missingness
+
+## Hypothesis Testing
+
+## Framing a Prediction Problem
+
+## Baseline Model
+
+## Final Model
+
+## Fairness Analysis
+
