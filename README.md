@@ -47,8 +47,7 @@ The 'Interactions' dataframe has more observations because there are multiple ra
  We created a new column called 'health_rating' and applied the 'healthy', 'medium healthy', or 'unhealthy' if the recipes' tags included any of the keywords.
 
 3. The second measure of healthiness was by using the nutritional facts of each recipe. We weighted the different nutritional facts based on their nutritional impact
-
- calories (#), total fat (PDV), sugar (PDV), sodium (PDV), protein (PDV), saturated fat (PDV), and carbohydrates (PDV)
+- calories (#), total fat (PDV), sugar (PDV), sodium (PDV), protein (PDV), saturated fat (PDV), and carbohydrates (PDV)
 
  | Nutritional Fact | Nutritional Impact |
  | :--------------- | :------------------ |
@@ -60,9 +59,9 @@ The 'Interactions' dataframe has more observations because there are multiple ra
  | saturated fat (PVD) | 0.25 |
  | carbohydrates (PVD) | 0.1 |
 
- Since protein can be beneficial to one's health, we made the impact of high protein negative. 
+- Since protein can be beneficial to one's health, we made the impact of high protein negative. 
  
- We added a column called 'health_score' which was the sum of all the nutritional facts multiplied by their nutritional impact. **The higher the 'health_score', the more unhealthy the recipe is.**
+- We added a column called 'health_score' which was the sum of all the nutritional facts multiplied by their nutritional impact. **The higher the 'health_score', the more unhealthy the recipe is.**
 
 ## Assessment of Missingness
 
