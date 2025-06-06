@@ -47,7 +47,8 @@ There are more ratings than recipes because some recipes have multiple ratings, 
     - This kept all recipes, and treated `0.0` ratings as missing.
 
 2. **Handled missing ratings**:
-    - Replaced with `np.NaN` to avoid skewing averages.
+    - Replaced 0.0 ratings with `np.NaN`
+    - If all missing ratings were 0.0, the total average rating would be skewed lower than it should be
 
 3. **Created `avg_rating`**:
     - Shows the average rating per recipe.
@@ -101,13 +102,20 @@ Our final DataFrame has 83,628 rows and 20 columns. Here's a sample row:
 ---
 
 ### Univariate Analysis
-This histogram shows the distribution of Health Scores with the outliers removed.
-
-Mean: 97.712
-Median: 64.999
+This histogram shows the distribution of Health Scores with the outliers removed. The lower the health score, the better. This plot helps the users understand the scale of the scores which will be useful when interpreting the rest of the analysis. The mean of the data is **97.712** and and the median health score is **64.999**. The distribution is skewed right histogram, so a higher proportion of recipes are on the healthier end of the scale.
 
 <iframe
   src="assets/univariate_health_scores.html"
+  width="800"
+  height="600"
+  frameborder="0"
+></iframe>
+
+### Bivariate Analysis
+This box plot
+
+<iframe
+  src="assets/box_plot_health_scores.html"
   width="800"
   height="600"
   frameborder="0"
