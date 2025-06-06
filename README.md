@@ -49,15 +49,15 @@ The 'Interactions' dataframe has more observations because there are multiple ra
 3. The second measure of healthiness was by using the nutritional facts of each recipe. We weighted the different nutritional facts based on their nutritional impact
 calories (#), total fat (PDV), sugar (PDV), sodium (PDV), protein (PDV), saturated fat (PDV), and carbohydrates (PDV)
 
- | Nutritional Fact | Nutritional Impact |
- | :--------------- | :------------------ |
- | calories (#) | 0.15 |
- | total fat (PVD) | 0.15 |
- | sugar (PVD) | 0.3 |
- | sodium (PVD) | 0.1 |
- | protein (PVD) | -0.2 |
- | saturated fat (PVD) | 0.25 |
- | carbohydrates (PVD) | 0.1 |
+     | Nutritional Fact | Nutritional Impact |
+     | :--------------- | :------------------ |
+     | calories (#) | 0.15 |
+     | total fat (PVD) | 0.15 |
+     | sugar (PVD) | 0.3 |
+     | sodium (PVD) | 0.1 |
+     | protein (PVD) | -0.2 |
+     | saturated fat (PVD) | 0.25 |
+     | carbohydrates (PVD) | 0.1 |
  
      Since protein can be beneficial to one's health, we made the impact of high protein negative.
 
