@@ -63,7 +63,7 @@ There are more ratings than recipes because some recipes have multiple ratings, 
     midhealthy_keywords = {'high-protein', 'pork-sausage', 'smoothies', 'desserts-fruit', 'low-in-something', 'pot-pie', 'dairy-free', 'gluten-free', 'casseroles', 'tex-mex'}
     unhealthy_keywords = {'drop-cookies', 'desserts', 'super-bowl', 'brownies', 'cakes', 'cake-fillings-and-frostings', 'fudge', 'rolled-cookies', 'cookies-and-brownies', 'cupcakes', 'desserts-easy', 'pies-and-tarts', 'sugar-cookies', 'fillings-and-frostings-chocolate', 'chocolate-chip-cookies', 'ice-cream'}
     ```
-**Computed `health_score**:
+**Computed `health_score` column**:
     - Weighted nutritional values to quantify health:
 
     | Nutritional Fact         | Impact |
