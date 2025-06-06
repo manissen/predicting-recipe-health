@@ -31,10 +31,10 @@ The 'Interactions' dataframe has more observations because there are multiple ra
 
 ## Data Cleaning and Exploratory Data Analysis
 To make the data easier to read and use, we merged the two datasets.
-'''py
+```py
 merged_data = recipes.merge(ratings, left_on='id', right_on='recipe_id', how='left')
 merged_data['rating'] = merged_data['rating'].replace(0.0, np.nan)
-'''
+```
 
 ## Assessment of Missingness
 
