@@ -152,6 +152,21 @@ Since the p-value is much smaller than your significance level (e.g., 0.05), you
 
 The missingness of rating depends on the health_score of the recipe. In other words, whether a recipe’s rating is missing is related to how healthy that recipe is. This suggests Missing At Random (MAR) rather than Missing Completely At Random (MCAR).
 
+<iframe
+  src="assets/health_score_dist_by_missingness.html"
+  width="800"
+  height="600"
+  frameborder="0"
+></iframe>
+
+<img 
+    src="assets/health_score_missingness.pdf"
+    width="800"
+      height="600"
+      frameborder="0"
+></img>
+
+
 ### Minutes and Rating
 Null Hypothesis: The missingness of ratings does not depend on the minutes the recipe takes.
 
@@ -160,13 +175,6 @@ Alternate Hypothesis: The missingness of ratings does depend on the minutes the 
 Test Statistic: The absolute difference of mean in the minutes of the distribution of the group without missing ratings and the distribution of the group with missing ratings.
 
 Significance Level: 0.05
-
-<iframe
-  src="assets/health_score_dist_by_missingness.html"
-  width="800"
-  height="600"
-  frameborder="0"
-></iframe>
 
 #### Results
 **Observed Difference: 51.4524**
