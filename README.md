@@ -63,7 +63,7 @@ There are more ratings than recipes because some recipes have multiple ratings, 
     midhealthy_keywords = {'high-protein', 'pork-sausage', 'smoothies', 'desserts-fruit', 'low-in-something', 'pot-pie', 'dairy-free', 'gluten-free', 'casseroles', 'tex-mex'}
     unhealthy_keywords = {'drop-cookies', 'desserts', 'super-bowl', 'brownies', 'cakes', 'cake-fillings-and-frostings', 'fudge', 'rolled-cookies', 'cookies-and-brownies', 'cupcakes', 'desserts-easy', 'pies-and-tarts', 'sugar-cookies', 'fillings-and-frostings-chocolate', 'chocolate-chip-cookies', 'ice-cream'}
     ```
-**Computed `health_score` column**:
+6. **Computed `health_score` column**:
     - Weighted nutritional values to quantify health:
 
     | Nutritional Fact         | Impact |
@@ -77,6 +77,15 @@ There are more ratings than recipes because some recipes have multiple ratings, 
     | carbohydrates (PDV)      | 0.1    |
 
     - Protein gets a negative weight due to its generally positive health impact.
+
+7. **Cretead `health_rating_num` column**:
+    - It makes a numerical column representing the health ratings
+    ```py
+    'unknown': 0,
+    'healthy': 1,
+    'medium healthy': 2,
+    'unhealthy': 3
+    ```
 
 7. **Grouped by recipe name**:
     - Prevented duplicate recipe names from skewing the results.
@@ -103,9 +112,6 @@ Median: 64.999
   height="600"
   frameborder="0"
 ></iframe>
-
-
-Seeing if its commiting my changes
 
 ## Assessment of Missingness
 
