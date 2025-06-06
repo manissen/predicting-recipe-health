@@ -132,13 +132,20 @@ The 'review' column is NMAR because the missingness of the value is dependent on
 We moved on to examine the missingness of 'rating' in the merged DataFrame by testing the dependency of its missingness. We are investigating whether the missiness in the 'rating' column depends on the column 'health_score', which is the feature we create to determine each recipe's health by creating a weighted score based on its nutritional values.
 
 #### Health Score and Rating
-Null Hypothesis: The missingness of ratings does not depend on the health score of the recipe.
+**Null Hypothesis:** The missingness of ratings does not depend on the health score of the recipe.
 
-Alternate Hypothesis: The missingness of ratings does depend on the health score of the recipe.
+**Alternate Hypothesis:** The missingness of ratings does depend on the health score of the recipe.
 
-Test Statistic: The absolute difference of mean in the health score of the distribution of the group without missing ratings and the distribution of the group with missing ratings.
+**Test Statistic:** The absolute difference of mean in the health score of the distribution of the group without missing ratings and the distribution of the group with missing ratings.
 
-Significance Level: 0.05
+**Significance Level:** 0.05
+
+<iframe
+  src="assets/health_score_dist_by_missingness.html"
+  width="800"
+  height="600"
+  frameborder="0"
+></iframe>
 
 #### Results
 **Observed Difference: 19.6667**
@@ -152,29 +159,22 @@ Since the p-value is much smaller than your significance level (e.g., 0.05), you
 
 The missingness of rating depends on the health_score of the recipe. In other words, whether a recipe’s rating is missing is related to how healthy that recipe is. This suggests Missing At Random (MAR) rather than Missing Completely At Random (MCAR).
 
+
+### Minutes and Rating
+**Null Hypothesis:** The missingness of ratings does not depend on the minutes the recipe takes.
+
+**Alternate Hypothesis:** The missingness of ratings does depend on the minutes the recipe takes.
+
+**Test Statistic:** The absolute difference of mean in the minutes of the distribution of the group without missing ratings and the distribution of the group with missing ratings.
+
+**Significance Level:** 0.05
+
 <iframe
-  src="assets/health_score_dist_by_missingness.html"
+  src="assets/minutes_dist_by_missingness.html"
   width="800"
   height="600"
   frameborder="0"
 ></iframe>
-
-<img 
-    src="assets/health_score_missingness.pdf"
-    width="800"
-      height="600"
-      frameborder="0"
-></img>
-
-
-### Minutes and Rating
-Null Hypothesis: The missingness of ratings does not depend on the minutes the recipe takes.
-
-Alternate Hypothesis: The missingness of ratings does depend on the minutes the recipe takes.
-
-Test Statistic: The absolute difference of mean in the minutes of the distribution of the group without missing ratings and the distribution of the group with missing ratings.
-
-Significance Level: 0.05
 
 #### Results
 **Observed Difference: 51.4524**
