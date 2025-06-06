@@ -15,6 +15,7 @@ The two datasets we used were 'Recipes' and 'Interactions'. The 'Recipe' datafra
 | 'name' | Name of the recipe |
 | 'id' | ID of the recipe |
 | 'minutes' | How long it took to make the recipe |
+| 'submitted' | When the recipe was added to the wesbite |
 | 'tags' | Different descriptors about the recipe |
 | 'nutrition' | Nutritional facts about the rating including calories (#), total fat (PDV), sugar (PDV), sodium (PDV), protein (PDV), saturated fat (PDV), and carbohydrates (PDV)|
 | 'ingredients' | Ingredients needed for the recipe |
@@ -24,12 +25,15 @@ The 'Interactions' dataframe contains 731927 rows and 5 columns. Here are the re
 | Column | Description |
 | :------ | :--------------------------- |
 | 'recipe_id' | ID of the recipe |
+| 'date' | When the user submitted their rating |
 | 'rating' | Rating of the recipe made by the specific user |
 | 'review'| Comment made by the user about the recipe |
 
 The 'Interactions' dataframe has more observations because there are multiple ratings per recipe. Some recipes don't contain any ratings.
 
 ## Data Cleaning and Exploratory Data Analysis
+
+### Data Cleaning
 1. To make the data easier to read and use, we merged the two datasets.
      ```py
      merged_data = recipes.merge(ratings, left_on='id', right_on='recipe_id', how='left')
@@ -42,15 +46,14 @@ The 'Interactions' dataframe has more observations because there are multiple ra
     - This gave us a generalized rating of each recipe we could baseline the individual ratings on
 4. Converted the items in the nutrition list from strings to floats
      - This allows us to manipulate the data and create health scores described below
-5. We added a few columns to accurately reflect a ratings health. Healthy vs Unhealthy recipes can be a bit arbitrary, so we incorporated different ways of measuring health. We first analyzed the 'tags' created by food.com and categorized some of them into 'healthy', 'medium healthy', and 'unhealthy'. Tags such as 'healthy', 'salads', and 'low-sodium' were keywords for 'healthy', while 'desserts', 'chocolate', and 'super-bowl' were categorized as 'unhealthy'. Below, we have included all of the keywords for the three categories:
+5. Healthy vs Unhealthy recipes can be a bit arbitrary, so we incorporated different ways of measuring health. We first analyzed the 'tags' created by food.com and categorized some of them into 'healthy', 'medium healthy', and 'unhealthy'. Below, we have included all of the keywords for the three categories:
      ```py
      healthy_keywords = {'healthy-2', 'healthy', 'salads', 'chard', 'vegan', 'very-low-carbs', 'vegetarian', 'high-fiber', 'spinach', 'low-carb', 'low-sodium', 'low-calorie', 'vegetables', 'low-fat', 'low-saturated-fat'}
      midhealthy_keywords = {'high-protein', 'pork-sausage', 'smoothies', 'desserts-fruit', 'low-in-something', 'pot-pie', 'dairy-free', 'gluten-free', 'casseroles', 'tex-mex'}
      unhealthy_keywords = {'drop-cookies', 'desserts', 'super-bowl', 'brownies', 'cakes', 'cake-fillings-and-frostings', 'fudge', 'rolled-cookies', 'cookies-and-brownies', 'cupcakes', 'desserts-easy', 'pies-and-tarts', 'sugar-cookies', 'fillings-and-frostings-chocolate', 'chocolate-chip-cookies', 'ice-cream'}
     ```
-    - We created a new column called 'health_rating' and applied the 'healthy', 'medium healthy', or 'unhealthy' if the recipes' tags included any of the keywords.
-6. The second measure of healthiness was by using the nutritional facts of each recipe. We weighted the different nutritional facts based on their nutritional impact
-calories (#), total fat (PDV), sugar (PDV), sodium (PDV), protein (PDV), saturated fat (PDV), and carbohydrates (PDV)
+    - We created a new column called 'health_rating' and applied the 'healthy', 'medium healthy', or 'unhealthy' categorizer if the recipes' tags included any of the respective keywords.
+6. The second measure of healthiness was by using the nutritional facts of each recipe. We weighted the different nutritional facts based on their nutritional impact. Sugar has a higher impact because it is a strong negative health indicator. Meanwhile, protein is generally considered to be a positive nutrient, especially when it comes from unprocessed sources.
 
      | Nutritional Fact | Nutritional Impact |
      | :--------------- | :------------------ |
@@ -66,7 +69,28 @@ calories (#), total fat (PDV), sugar (PDV), sodium (PDV), protein (PDV), saturat
 
     - We added a column called health_score which was the sum of all the nutritional facts multiplied by their nutritional impact.
 The higher the health_score, the more unhealthy the recipe is.
+7. We grouped the data by the name of the recipe.
+    - This made sure that recipes with more ratings wouldn't have as big of an impact on our analysis
 
+Our final dataframe contains 83628 rows and 20 columns. He is an example of what one row looks like. We included the columns that are most important for our project.
+
+| name | id | tags | nutrition | n_ingredients | rating | avg_rating | difficulty| health_rating | health_score |
+| :----| :- | :----| :-------- | :------------ | :------| :----------| :-------- | :-------------| :----------- |
+|0 carb 0 cal gummy worms|45|['60-minutes-or-less', 'time-to-make', ...]|[384.7, 0.0, 0.0, 70.0, 159.0, 0.0, 6.0|3|5|4.75|intermediate|unhealthy|33.5|
+
+
+### Univariate Analysis
+This histogram shows the distribution of Health Scores with the outliers removed.
+
+Mean: 97.712
+Median: 64.999
+
+<iframe
+  src="assets/univariate_health_scores.html"
+  width="800"
+  height="600"
+  frameborder="0"
+></iframe>
 
 ## Assessment of Missingness
 
