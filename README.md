@@ -12,7 +12,7 @@ We used two datasets: **Recipes** and **Interactions**.
 
 ### Recipe Dataset (83,782 rows, 12 columns)
 
-| Column        | Description                                                                 |
+| Column        | Description                                                                  |
 |---------------|------------------------------------------------------------------------------|
 | `name`        | Name of the recipe                                                           |
 | `id`          | ID of the recipe                                                             |
@@ -67,7 +67,7 @@ There are more ratings than recipes because some recipes have multiple ratings, 
     - Weighted nutritional values to quantify health:
 
     | Nutritional Fact         | Impact |
-    |--------------------------|--------|
+    | ------------------------ | -------|
     | calories (#)             | 0.15   |
     | total fat (PDV)          | 0.15   |
     | sugar (PDV)              | 0.3    |
