@@ -374,12 +374,29 @@ We decided to conduct a model to test the accuracy across different types od cui
     Vizualized the metric scores to identify disparities in model accuracy or predictive power across different cuisine groups.
 
 6. **Conduct Pairwise Permutation Tests**
-    For each pair of cuisine groups, we performed a permutation test to determine whether the observed difference in metric scores is statistically significant. The permutation test involved:
+    For each pair of cuisine groups, we performed a permutation test to determine whether the observed difference in metric scores is statistically significant.
+
+   Hypotheses for Fairness Analysis of Cuisine Groups:
+     - Null Hypothesis (H₀):
+         There is no difference in the model’s predictive performance measured by macro F1-score between the two cuisine groups being compared.
+     - Alternative Hypothesis (H₁):
+        There is a significant difference in the model’s predictive performance between the two cuisine groups. The model performs differently for              one cuisine group compared to the other.
+    
+    The permutation test involved:
         - Combining data from the two groups.
         - Randomly shuffling group labels many times (e.g., 1000 permutations).
         - Calculating metric differences for each shuffle.
         - Comparing the observed metric difference to the permutation distribution to compute a p-value.
 ### Results
+
+| Comparison           | Difference | P-value | Interpretation                                                                 |
+|----------------------|------------|---------|---------------------------------------------------------------------------------|
+| Western vs Eastern   | 0.0023     | 0.4480  | Very small difference; not statistically significant (p > 0.05). Model performs similarly on these groups. |
+| Western vs African   | -0.0293    | 0.1930  | Moderate negative difference; not statistically significant. Model might perform slightly worse on African, but difference could be due to chance. |
+| Western vs Latin     | 0.0426     | 0.0400  | Moderate positive difference; statistically significant (p < 0.05). Model performs better on Western than Latin cuisine. |
+| Eastern vs African   | -0.0316    | 0.1780  | Moderate negative difference; not statistically significant. Model performance is similar with a slight edge for Eastern. |
+| Eastern vs Latin     | 0.0403     | 0.0830  | Moderate positive difference; not statistically significant at 0.05, but suggestive (p close to 0.05). Possible better performance on Eastern. |
+| African vs Latin     | 0.0719     | 0.0410  | Larger positive difference; statistically significant. Model performs better on African cuisine than Latin cuisine. |
 
 The model showed unequal performance, doing worse on Latin cuisine compared to Western and African cuisines with statistically significant gaps. This indicates potential fairness issues that might disadvantage users interested in Latin cuisine recipes. The other cuisine groups have more comparable model performance. This analysis highlights performance gaps in the recipe health prediction model, showing it performs less well on Latin cuisine compared to others. While moderate, these differences raise fairness concerns that may affect user trust and experience, especially for underrepresented groups.
 
