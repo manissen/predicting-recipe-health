@@ -221,16 +221,19 @@ Name: health_score, dtype: float64
 
 ### Results
 **Observed Difference: -0.003661316119038638**
+
 This is: mean_rating_healthy - mean_rating_unhealthy
 So: Healthy recipes (lower health score) have slightly lower ratings than unhealthy recipes.
 But the difference is very small — only about 0.0037 rating points, which is nearly negligible.
 
 
 **P-value: 0.213**
+
 We asked: Do unhealthy recipes get higher ratings than healthy ones?
 A p-value of 0.213 means there's a 21.3% chance of seeing a difference as extreme (or more extreme) than our observed one just by random chance, assuming the null hypothesis is true. Since this is greater than 0.05, we fail to reject the null hypothesis.
 
-**Interpretation**
+**Interpretation:**
+
 There is no statistically significant evidence that unhealthy recipes are rated higher than healthy ones. The data leans in that direction (since the difference is negative), but the evidence isn’t strong enough to say it’s a real effect.
 
 ## Framing a Prediction Problem
@@ -238,28 +241,31 @@ In this project, we aim to build a multiclass classification model to predict th
 
 
 **Target Variable: health_rating**
-This is a categorical variable with three classes: healthy, medium healthy, and unhealthy.
 
-
-It was derived based on the presence of health-related tags associated with each recipe. Tags were scored using a custom weighting system, and thresholds were set to assign one of the three labels.
+This is a categorical variable with three classes: healthy, medium healthy, and unhealthy. It was derived based on the presence of health-related tags associated with each recipe. Tags were scored using a custom weighting system, and thresholds were set to assign one of the three labels.
 
 
 **Why this variable:**
+
 Understanding and predicting the healthiness of a recipe is valuable for users aiming to make informed dietary choices. It also allows us to explore how recipe metadata and nutrition correlate with perceived healthiness.
 
 **Evaluation Metric**
+
 We evaluate our model using the F1-score (macro average).
 
 
 **Why not accuracy:**
+
 Since the class distribution is imbalanced (e.g., more recipes labeled "healthy"), accuracy could be misleading — a model that always predicts the majority class would appear to perform well.
 
 
 **Why F1-score:**
+
 The F1-score balances precision and recall, giving a more informative measure of performance on each class, especially for underrepresented ones like unhealthy or medium healthy. The macro-averaged F1 ensures each class is treated equally, regardless of how many examples it contains.
 
 
 ## Baseline Model
+
 We trained a baseline classification model to predict a recipe's health rating using only its nutritional information. The model uses a Random Forest Classifier, chosen because of its ability to handle nonlinear relationships and unscaled features.
 
 We have 7 quantitative features:
@@ -273,10 +279,12 @@ We have 7 quantitative features:
 
 Since all the features are numerical, we did not have to do any encoding.
 
-**Model and Pipeline**
+**Model and Pipeline:**
+
 The model was wrapped in a Pipeline for modularity, combining preprocessing and model training. The RandomForestClassifier was trained with class weighting to address imbalanced classes.
 
 **Performance**
+
 On the held-out test set, the model achieved:
 - Accuracy: 62%
 - F1-scores:
@@ -286,6 +294,7 @@ On the held-out test set, the model achieved:
     - Macro Average F1: 0.43
 
 **Evaluation**
+
 While the model performs reasonably well for predicting “healthy” recipes (precision = 0.65, recall = 0.90), it performs poorly on “medium healthy” (F1 = 0.07), suggesting that it has difficulty distinguishing this middle class. The overall macro F1-score of 0.43 indicates that the model struggles with class balance and nuance, especially for the less frequent or less clearly defined classes.
 
 We consider this a reasonable but not strong baseline. It shows that nutritional information contains some signal for predicting health rating, but there's substantial room for improvement — potentially by including non-nutritional features (e.g., ingredients, preparation methods) or applying more sophisticated models or oversampling methods to address imbalance.
@@ -343,4 +352,40 @@ Here is a chart we used to decide which features to use for our final model:
 The final model is better because it addresses the key weakness of the baseline: poor detection of “medium healthy” and “unhealthy” classes. It achieves a more balanced classification by improving recall and F1-scores on these minority classes at the cost of some accuracy and recall for the majority “healthy” class. This balance is often preferable in practical scenarios where detecting all categories fairly is important.
 
 ## Fairness Analysis
+We decided to conduct a model to test the accuracy across different types od cuisine using the 'tags' column of the dataframe.
 
+### Procedure
+
+1. **Model Prediction on Test Set**
+    Used the trained model (best_model) to predict labels (y_pred) on the test dataset features (X_test).
+
+2. **Augment Test DataFrame with True and Predicted Labels**
+    - Added two new columns to the test DataFrame (df_test):
+        - y_true: the actual true labels from y_test
+        - y_pred: the predicted labels from the model
+
+3. **Define Group Metric Function**
+    Created a function that calculated a chosen performance metric (here, the macro F1-score) on any subset of the data. This function took a DataFrame for a single group and returned the group's metric score.
+
+4. **Calculate Metric per Cuisine Group**
+    Grouped df_test by the categorical variable cuisine_group and applied the metric function to each group to get performance scores per cuisine.
+
+5. **Display Performance Results by Group**
+    Vizualized the metric scores to identify disparities in model accuracy or predictive power across different cuisine groups.
+
+6. **Conduct Pairwise Permutation Tests**
+    For each pair of cuisine groups, we performed a permutation test to determine whether the observed difference in metric scores is statistically significant. The permutation test involved:
+        - Combining data from the two groups.
+        - Randomly shuffling group labels many times (e.g., 1000 permutations).
+        - Calculating metric differences for each shuffle.
+        - Comparing the observed metric difference to the permutation distribution to compute a p-value.
+
+### Results
+
+The model showed unequal performance, doing worse on Latin cuisine compared to Western and African cuisines with statistically significant gaps. This indicates potential fairness issues that might disadvantage users interested in Latin cuisine recipes. The other cuisine groups have more comparable model performance. This analysis highlights performance gaps in the recipe health prediction model, showing it performs less well on Latin cuisine compared to others. While moderate, these differences raise fairness concerns that may affect user trust and experience, especially for underrepresented groups.
+
+### PROJECT CONCLUSION THANKS CHAT
+
+This project developed a robust classification model to predict recipe health ratings by combining nutritional, preparation, and textual features with engineered metrics such as calories per minute and sugar-to-protein ratio. Using a Random Forest classifier with careful hyperparameter tuning and balanced class weights, the final model demonstrated solid overall predictive performance, reflected in strong macro and weighted F1 scores.
+However, fairness analysis revealed disparities in model accuracy across cuisine groups, with notably lower performance on Latin cuisine recipes. These results highlight the need to address data imbalance and model bias to ensure equitable predictions for diverse culinary traditions. Users should be mindful of these limitations when applying the model and consider supplementing predictions with domain knowledge, especially for underrepresented cuisine types.
+Future improvements could focus on improving data diversity, refining feature engineering, and exploring fairness to build more inclusive and reliable health prediction tools. Ultimately, balancing accuracy with fairness will better serve all users seeking healthy recipe recommendations.
