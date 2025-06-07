@@ -168,7 +168,6 @@ This histogram shows the distribution of 'health_score' with the outliers remove
   height="600"
   frameborder="0"
 ></iframe>
-
 ### Bivariate Analysis
 This box plot shows the distribution of health scores across three health rating categories: healthy, medium healthy, and unhealthy with outliers removed. Overall, we see that recipes labeled as healthy tend to have lower health scores (indicating better health), while unhealthy recipes have higher and more variable scores, suggesting a clear trend in health score as health rating decreases (becomes healthier).
 
@@ -178,7 +177,6 @@ This box plot shows the distribution of health scores across three health rating
   height="600"
   frameborder="0"
 ></iframe>
-
 ## Assessment of Missingness
 In our final dataframe that is grouped by recipe, there are three columns that have a significant number of missing values. These are, 'description', 'rating', and 'review'.
 
@@ -203,9 +201,7 @@ Next we will examine the missingness of 'rating' in the merged DataFrame by test
   height="600"
   frameborder="0"
 ></iframe>
-
 <img src="assets/health_score_missingness.png" width="800" />
-
 #### Results
 **Observed Difference: 19.6667**
 
@@ -220,7 +216,6 @@ The p-value is effectively 0 (or very close to zero). This means it is extremely
 Since the p-value is much smaller than the significance level (0.05), we reject the null hypothesis and conclude:
 
 The missingness of 'rating' depends on the 'health_score' of the recipe. Whether a recipe’s rating is missing is related to how healthy that recipe is. This suggests 'rating' is Missing At Random (MAR) rather than Missing Completely At Random (MCAR).
-
 
 ### Minutes and Rating
 Next we will analyze if the missingness of 'rating' depends on the 'minutes' a recipe takes to make. 
@@ -239,9 +234,7 @@ Next we will analyze if the missingness of 'rating' depends on the 'minutes' a r
   height="600"
   frameborder="0"
 ></iframe>
-
 <img src="assets/minutes_missing_hist.png" width="800" />
-
 #### Results
 **Observed Difference: 51.4524**
 
@@ -285,7 +278,6 @@ Difference in Group Means
   height="600"
   frameborder="0"
 ></iframe>
-
 ### Results
 **Observed Difference: -0.0061669**
 
@@ -500,21 +492,18 @@ The model showed unequal performance, doing worse on Latin cuisine compared to W
   height="600"
   frameborder="0"
 ></iframe>
-
 <iframe
   src="assets/east_latin.html"
   width="800"
   height="600"
   frameborder="0"
 ></iframe>
-
 <iframe
   src="assets/afican_latin.html"
   width="800"
   height="600"
   frameborder="0"
 ></iframe>
-
 ### PROJECT CONCLUSION
 
 This project developed a robust classification model to predict recipe health ratings by combining nutritional, preparation, and textual features with engineered metrics such as calories per minute and sugar-to-protein ratio. Using a Random Forest classifier with careful hyperparameter tuning and balanced class weights, the final model demonstrated solid overall predictive performance, reflected in strong macro and weighted F1 scores.
