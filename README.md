@@ -189,27 +189,26 @@ This is the probability of seeing a difference this large (or larger) just by ra
 **Interpretation:**
 Since p-value (0.1040) > significance level (0.05), we fail to reject the null hypothesis. You do not have statistically significant evidence that the missingness in rating depends on minutes. Although there's a noticeable average time difference between recipes with and without ratings, there's not enough statistical evidence to say that recipe duration (minutes) explains why ratings are missing.
 
-
-## Hypothesis Testing
+## Hypothesis Testing 
+We are interested in analyzing if recipes that are unhealthy get higher ratings compared to healthy recipes. We are using data from our 'health_score' column which assigns a score to each recipe denoting its healthiness. Higher scores correspond to unhealthy recipes. We selected the cutoff between unhealthy and healthy recipes as 68.81 because it is the median of the 'medium healthy' category and represents the center of the health scores. 
 
 ### Null Hypothesis
-There is no difference between the ratings of recipes that have health scores less than or equal to 61.81 and recipes that have health scores greater than 61.81.
+There is no difference between the ratings of recipes have health scores less than or equal to 68.81 and recipes that have health scores greater than 68.81. 
 
 ### Alternative Hypothesis:
-Recipes that have health scores greater than 61.81 get higher ratings than recipes that have health scores less than or equal to 61.81.
-
+Recipes that have health scores greater than 68.81 get higher ratings than recipes that have health scores less than or equal to 68.81.
 
 ### Test Statistic
 Difference in Group Means
+
 ```py
-mean_health_score_by_rating = by_recipe.groupby('health_rating')['health_score'].median()
-print(mean_health_score_by_rating)
+median_health_score_by_rating = by_recipe.groupby('health_rating')['health_score'].median()
+print(median_health_score_by_rating)
 
 health_rating
-healthy           55.49
-medium healthy    61.81
-unhealthy         83.49
-unknown           67.98
+healthy           60.21
+medium healthy    68.81
+unhealthy         76.28
 Name: health_score, dtype: float64
 ```
 <iframe
@@ -220,17 +219,17 @@ Name: health_score, dtype: float64
 ></iframe>
 
 ### Results
-**Observed Difference: -0.003661316119038638**
+**Observed Difference: -0.0061669**
 
 This is: mean_rating_healthy - mean_rating_unhealthy
+
 So: Healthy recipes (lower health score) have slightly lower ratings than unhealthy recipes.
-But the difference is very small — only about 0.0037 rating points, which is nearly negligible.
+But the difference is small.
 
-
-**P-value: 0.213**
+**P-value: 0.099**
 
 We asked: Do unhealthy recipes get higher ratings than healthy ones?
-A p-value of 0.213 means there's a 21.3% chance of seeing a difference as extreme (or more extreme) than our observed one just by random chance, assuming the null hypothesis is true. Since this is greater than 0.05, we fail to reject the null hypothesis.
+A p-value of 0.099 means there's a 9.9% chance of seeing a difference as extreme (or more extreme) than our observed one just by random chance, assuming the null hypothesis is true. Since this is greater than 0.05, we fail to reject the null hypothesis.
 
 **Interpretation:**
 
@@ -421,7 +420,7 @@ The model showed unequal performance, doing worse on Latin cuisine compared to W
   frameborder="0"
 ></iframe>
 
-### PROJECT CONCLUSION THANKS CHAT
+### PROJECT CONCLUSION
 
 This project developed a robust classification model to predict recipe health ratings by combining nutritional, preparation, and textual features with engineered metrics such as calories per minute and sugar-to-protein ratio. Using a Random Forest classifier with careful hyperparameter tuning and balanced class weights, the final model demonstrated solid overall predictive performance, reflected in strong macro and weighted F1 scores.
 However, fairness analysis revealed disparities in model accuracy across cuisine groups, with notably lower performance on Latin cuisine recipes. These results highlight the need to address data imbalance and model bias to ensure equitable predictions for diverse culinary traditions. Users should be mindful of these limitations when applying the model and consider supplementing predictions with domain knowledge, especially for underrepresented cuisine types.
