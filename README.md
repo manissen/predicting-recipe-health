@@ -3,7 +3,7 @@
 By: Mieko Chun and Margot Nissen
 
 ## Overview
-This DSC 80 project focuses on predicting how healthy a recipe is using features such as nutrition ratings and health tags associated with each recipe.
+This DSC 80 project focuses on predicting how healthy a recipe is using features such as nutrition ratings and health tags associated with each recipe. We are trying to categorize recipes as 'healthy', 'medium-healthy' or 'unhealthy' based on the variables in the recipes and interactions datasets. We will analyze a variety of methods to define 'healthiness' including looking at recipe tags and nutrition information. Our end goal is to create a useful classifier to assign recipes to each of the health ratings.
 
 ## Introduction
 As health and nutrition become a greater concern, it's important for people to understand the nutritional content of a recipe. This project helps users make better dietary decisions by analyzing recipes through their nutritional ratings and tags.
@@ -160,7 +160,7 @@ Our final DataFrame has 83,628 rows and 20 columns. Here's a sample row:
 ---
 
 ### Univariate Analysis
-This histogram shows the distribution of Health Scores with the outliers removed. The lower the health score, the better. This plot helps the users understand the scale of the scores which will be useful when interpreting the rest of the analysis. The mean of the data is **97.712** and and the median health score is **64.999**. The distribution is skewed right histogram, so a higher proportion of recipes are on the healthier end of the scale.
+This histogram shows the distribution of 'health_score' with the outliers removed. The lower the health score, the better. This plot helps the users understand the scale of the scores which will be useful when interpreting the rest of the analysis. The mean of the data is **97.712** and and the median health score is **64.999**. The distribution is skewed right histogram, so a higher proportion of recipes are on the healthier end of the scale.
 
 <iframe
   src="assets/univariate_health_scores.html"
@@ -183,17 +183,17 @@ This box plot shows the distribution of health scores across three health rating
 In our final dataframe that is grouped by recipe, there are three columns that have a significant number of missing values. These are, 'description', 'rating', and 'review'.
 
 ### NMAR Analysis
-The 'review' column is NMAR because the missingness of the value is dependent on the fact that the user decided not to leave a review. That is, the reason the review column is blank is because the user decided that they didn't want to leave a review. Its missingness is not dependent on any other column, but rather, the missing value itself.
+The 'review' column is NMAR because the missingness of the value is dependent on the fact that the user decided not to leave a review. Some users only leave reviews when they really like a recipe. If they really disliked it, they might not bother reviewing at all. So, bad reviews may be missing. People with strong opinions (very good or very bad) are more likely to write reviews. People who feel neutral might skip it. So reviews are biased toward emotional extremes, and moderate reviews may be missing. Its missingness is not dependent on any other column, but rather, the missing value itself.
 
 ### MAR Analysis
-We moved on to examine the missingness of 'rating' in the merged DataFrame by testing the dependency of its missingness. We are investigating whether the missiness in the 'rating' column depends on the column 'health_score', which is the feature we create to determine each recipe's health by creating a weighted score based on its nutritional values.
+Next we will examine the missingness of 'rating' in the merged DataFrame by testing the dependency of its missingness. We are investigating whether the missiness in the 'rating' column depends on the column 'health_score', which is the feature we created to determine each recipe's health by creating a weighted score based on its nutritional values. Lower scores correspond to healthier recipes.
 
 #### Health Score and Rating
 **Null Hypothesis:** The missingness of ratings does not depend on the health score of the recipe.
 
 **Alternate Hypothesis:** The missingness of ratings does depend on the health score of the recipe.
 
-**Test Statistic:** The absolute difference of mean in the health score of the distribution of the group without missing ratings and the distribution of the group with missing ratings.
+**Test Statistic:** The absolute difference of means between the health scores of the group with missing ratings and the group without missing ratings.
 
 **Significance Level:** 0.05
 
@@ -211,20 +211,22 @@ We moved on to examine the missingness of 'rating' in the merged DataFrame by te
 The absolute difference between the average health scores of recipes with missing ratings and recipes with ratings present is about 19.67. This is a pretty big difference, indicating that the two groups differ substantially in their health scores.
 
 **P-value: 0.0000**
-The p-value (probability of seeing a difference at least this extreme if the null hypothesis were true) is effectively 0 (or very close to zero). This means it is extremely unlikely that such a large difference in health scores between missing and non-missing ratings would happen by random chance if missingness were truly independent of health score.
+The p-value is effectively 0 (or very close to zero). This means it is extremely unlikely that such a large difference in health scores between missing and non-missing ratings would happen by random chance if missingness were truly independent of health score.
 
 **Interpretation:**
-Since the p-value is much smaller than your significance level (e.g., 0.05), you reject the null hypothesis and conclude:
+Since the p-value is much smaller than the significance level (0.05), we reject the null hypothesis and conclude:
 
-The missingness of rating depends on the health_score of the recipe. In other words, whether a recipe’s rating is missing is related to how healthy that recipe is. This suggests Missing At Random (MAR) rather than Missing Completely At Random (MCAR).
+The missingness of 'rating' depends on the 'health_score' of the recipe. Whether a recipe’s rating is missing is related to how healthy that recipe is. This suggests 'rating' is Missing At Random (MAR) rather than Missing Completely At Random (MCAR).
 
 
 ### Minutes and Rating
+Next we will analyze if the missingness of 'rating' depends on the 'minutes' a recipe takes to make. 
+
 **Null Hypothesis:** The missingness of ratings does not depend on the minutes the recipe takes.
 
 **Alternate Hypothesis:** The missingness of ratings does depend on the minutes the recipe takes.
 
-**Test Statistic:** The absolute difference of mean in the minutes of the distribution of the group without missing ratings and the distribution of the group with missing ratings.
+**Test Statistic:** The absolute difference of means between the minutes of the group with missing ratings and the group without missing ratings.
 
 **Significance Level:** 0.05
 
@@ -239,26 +241,18 @@ The missingness of rating depends on the health_score of the recipe. In other wo
 
 #### Results
 **Observed Difference: 51.4524**
-On average, the time difference between recipes with and without missing ratings is ~51 minutes.
+On average, the difference in minutes between recipes with and without missing ratings is ~51 minutes.
 
 **P-value: 0.1040**
 This is the probability of seeing a difference this large (or larger) just by random chance if the null hypothesis were true.
 
 **Interpretation:**
-Since p-value (0.1040) > significance level (0.05), we fail to reject the null hypothesis. You do not have statistically significant evidence that the missingness in rating depends on minutes. Although there's a noticeable average time difference between recipes with and without ratings, there's not enough statistical evidence to say that recipe duration (minutes) explains why ratings are missing.
+Since p-value (0.1040) > significance level (0.05), we fail to reject the null hypothesis. We do not have statistically significant evidence that the missingness in rating depends on minutes. Although there's a noticeable average time difference between recipes with and without ratings, there's not enough statistical evidence to say that recipe duration (minutes) explains why ratings are missing.
 
 ## Hypothesis Testing 
-We are interested in analyzing if recipes that are unhealthy get higher ratings compared to healthy recipes. We are using data from our 'health_score' column which assigns a score to each recipe denoting its healthiness. Higher scores correspond to unhealthy recipes. We selected the cutoff between unhealthy and healthy recipes as 68.81 because it is the median of the 'medium healthy' category and represents the center of the health scores. 
+We are interested in analyzing if recipes that are unhealthy get higher ratings compared to healthy recipes. We hypothesize that people may review 'unhealthy' recipes higher because they have higher sugar and fat content and may taste better. We are using data from our 'health_score' column which assigns a score to each recipe denoting its healthiness. Higher scores correspond to unhealthy recipes. We selected the cutoff between unhealthy and healthy recipes to be 68.81 because it is the median of the 'medium healthy' category and is at the center of the "health_score" data. 
 
-### Null Hypothesis
-There is no difference between the ratings of recipes have health scores less than or equal to 68.81 and recipes that have health scores greater than 68.81. 
-
-### Alternative Hypothesis:
-Recipes that have health scores greater than 68.81 get higher ratings than recipes that have health scores less than or equal to 68.81.
-
-### Test Statistic
-Difference in Group Means
-
+Median 'health_score' of each 'health_rating' category:
 ```py
 median_health_score_by_rating = by_recipe.groupby('health_rating')['health_score'].median()
 print(median_health_score_by_rating)
@@ -269,6 +263,16 @@ medium healthy    68.81
 unhealthy         76.28
 Name: health_score, dtype: float64
 ```
+
+### Null Hypothesis
+There is no difference between the ratings of recipes have health scores less than or equal to 68.81 and recipes that have health scores greater than 68.81. 
+
+### Alternative Hypothesis:
+Recipes that have health scores greater than 68.81 get higher ratings than recipes that have health scores less than or equal to 68.81.
+
+### Test Statistic
+Difference in Group Means
+
 <iframe
   src="assets/health_score_perm.html"
   width="800"
@@ -286,46 +290,36 @@ But the difference is small.
 
 **P-value: 0.099**
 
-We asked: Do unhealthy recipes get higher ratings than healthy ones?
 A p-value of 0.099 means there's a 9.9% chance of seeing a difference as extreme (or more extreme) than our observed one just by random chance, assuming the null hypothesis is true. Since this is greater than 0.05, we fail to reject the null hypothesis.
 
 **Interpretation:**
 
-There is no statistically significant evidence that unhealthy recipes are rated higher than healthy ones. The data leans in that direction (since the difference is negative), but the evidence isn’t strong enough to say it’s a real effect.
+There is no statistically significant evidence that unhealthy recipes are rated higher than healthy ones. That said, the data leans in that direction (since the difference is negative), but the evidence isn’t strong enough to say it’s a real effect.
 
 ## Framing a Prediction Problem
-In this project, we aim to build a multiclass classification model to predict the healthiness level of a recipe based on its metadata and nutritional information. Specifically, the model classifies each recipe into one of three categories: "healthy", "medium healthy", or "unhealthy".
+In this project, we aim to build a multiclass classification model to predict the healthiness rating of a recipe based on its data and nutritional information. Specifically, we want our model to classify each recipe into one of three categories: "healthy", "medium healthy", or "unhealthy" as found in the 'health_rating' column which is based on each recipe's tags.
 
 
 **Target Variable: health_rating**
-
-This is a categorical variable with three classes: healthy, medium healthy, and unhealthy. It was derived based on the presence of health-related tags associated with each recipe. Tags were scored using a custom weighting system, and thresholds were set to assign one of the three labels.
-
+This is a categorical variable with three classes: healthy, medium healthy, and unhealthy. It is  based on the presence of health-related tags associated with each recipe. Tags were scored using a custom weighting system, and thresholds were set to assign each recipe one of the three labels.
 
 **Why this variable:**
-
-Understanding and predicting the healthiness of a recipe is valuable for users aiming to make informed dietary choices. It also allows us to explore how recipe metadata and nutrition correlate with perceived healthiness.
+Understanding and predicting the healthiness of a recipe is valuable for users aiming to make informed dietary choices. It also allows us to explore how recipe data and nutrition correlate with perceived healthiness.
 
 **Evaluation Metric**
-
-We evaluate our model using the F1-score (macro average).
-
+We will evaluate our model using the F1-score (macro average). This measure averages the F1-scores for each class equally, which is important because we do not have equal numbers of 'unhealthy', 'medium healthy', and 'healthy' recipes.
 
 **Why not accuracy:**
+Since the class distribution is imbalanced (e.g., more recipes labeled "healthy"), accuracy could be misleading. This is because a model that always predicts the majority class would appear to perform well.
 
-Since the class distribution is imbalanced (e.g., more recipes labeled "healthy"), accuracy could be misleading — a model that always predicts the majority class would appear to perform well.
-
-
-**Why F1-score:**
-
-The F1-score balances precision and recall, giving a more informative measure of performance on each class, especially for underrepresented ones like unhealthy or medium healthy. The macro-averaged F1 ensures each class is treated equally, regardless of how many examples it contains.
+**Variables at the time of prediction**
+At the time of prediction, we would have access to variables such as 'name', 'id', 'minutes', 'n_steps', 'description', 'tags', and 'nutrition' since these are known when each recipe is created. We would not neccesarily have access to feedback data such as 'rating', 'review', 'user_id', 'recipe_id', and 'date' which is constanly being added by new users who make the recipes.
 
 
 ## Baseline Model
-
 We trained a baseline classification model to predict a recipe's health rating using only its nutritional information. The model uses a Random Forest Classifier, chosen because of its ability to handle nonlinear relationships and unscaled features.
 
-We have 7 quantitative features:
+We have 7 quantitative nutritional features:
 - calories
 - total_fat_PDV
 - sugar_PDV
@@ -337,12 +331,10 @@ We have 7 quantitative features:
 Since all the features are numerical, we did not have to do any encoding.
 
 **Model and Pipeline:**
-
 The model was wrapped in a Pipeline for modularity, combining preprocessing and model training. The RandomForestClassifier was trained with class weighting to address imbalanced classes.
 
 **Performance**
-
-On the held-out test set, the model achieved:
+On the test set, the model achieved:
 - Accuracy: 62%
 - F1-scores:
     - Healthy: 0.76
@@ -350,11 +342,25 @@ On the held-out test set, the model achieved:
     - Unhealthy: 0.47
     - Macro Average F1: 0.43
 
+```py
+                  precision    recall  f1-score   support
+
+       healthy       0.65      0.90      0.76      9713
+medium healthy       0.24      0.04      0.07      3171
+     unhealthy       0.57      0.40      0.47      3842
+
+      accuracy                           0.62     16726
+     macro avg       0.49      0.45      0.43     16726
+  weighted avg       0.55      0.62      0.56     16726
+```
+
+- **Macro F1-score: 0.4327032746579715**
+- **Weighted F1-score: 0.5605849860790696**
+
 **Evaluation**
+While the model performs reasonably well for predicting “healthy” recipes (precision = 0.65, recall = 0.90), it performs poorly on “medium healthy” (F1 = 0.07), suggesting that it has difficulty distinguishing this middle class. The overall macro F1-score of 0.43 indicates that the model struggles with class balance and nuance, especially for the less frequent or less clearly defined classes. This makes sense as the "medium healthy" class has more noise and less consistent labeling.
 
-While the model performs reasonably well for predicting “healthy” recipes (precision = 0.65, recall = 0.90), it performs poorly on “medium healthy” (F1 = 0.07), suggesting that it has difficulty distinguishing this middle class. The overall macro F1-score of 0.43 indicates that the model struggles with class balance and nuance, especially for the less frequent or less clearly defined classes.
-
-We consider this a reasonable but not strong baseline. It shows that nutritional information contains some signal for predicting health rating, but there's substantial room for improvement — potentially by including non-nutritional features (e.g., ingredients, preparation methods) or applying more sophisticated models or oversampling methods to address imbalance.
+We consider this a reasonable but not strong baseline. It shows that nutritional information contains some insight for predicting health rating, but there's substantial room for improvement — potentially by including non-nutritional features (e.g., description, minutes) or applying more complex models or methods to address imbalance.
 
 ## Final Model
 Here is a chart we used to decide which features to use for our final model:
@@ -370,26 +376,48 @@ Here is a chart we used to decide which features to use for our final model:
 | health_rating_num | Numeric version | Yes | Yes |
 | rating, review, user_id, recipe_id, date | Metadata | No, after submission | No (invalid for prediction) |
 
-1. **Feature Engineering:** Creates two new features — **calories per minute** (how many calories per minute it takes to prepare the recipe) and **sugar-to-protein ratio** (a measure comparing sugar to protein content) — to provide more meaningful signals for the model.
+**Steps to improve upon Baseline Model and create Final Model**
+
+1. **Feature Engineering:** We created two new features — **calories per minute** (how many calories per minute it takes to prepare the recipe) and **sugar-to-protein ratio** (a measure comparing sugar to protein content) — to provide more meaningful signals for the model.
 
 2. **Data Preparation:** We selected the relevant columns including numeric nutrition values, recipe details, and the health rating label; then removed any rows with missing data to ensure clean input.
 
-3. **Train-Test Split:** Split the dataset into training and testing subsets, making sure the distribution of health rating classes was similar in both sets by stratifying the split.
+3. **Train-Test Split:** Next, we split the dataset into training and testing subsets, making sure the distribution of health rating classes was similar in both sets by stratifying the split.
 
-4. **Preprocessing Pipeline:** Applied standard scaling to numeric features so they would on comparable scales, and converted the recipe descriptions into numerical features using TF-IDF to capture important text patterns.
+4. **Preprocessing Pipeline:** We then applied standard scaling to numeric features so they would on comparable scales, and converted the recipe descriptions into numerical features using TF-IDF to capture important text patterns.
 
-5. **Model Setup:** Used a Random Forest classifier that accounted for class imbalance by weighting classes inversely to their frequency, improving prediction fairness across classes.
+5. **Model Setup:** Next, we used a Random Forest classifier that accounted for class imbalance by weighting classes inversely to their frequency, improving prediction fairness across classes.
 
-6. **Hyperparameter Tuning:** Ran a grid search with cross-validation over various Random Forest parameters (like number of trees, tree depth, etc.) to find the best combination that maximized macro F1 score.
+6. **Hyperparameter Tuning:** Then we ran a grid search with cross-validation over various Random Forest parameters (like number of trees, tree depth, etc.) to find the best combination that maximized macro F1 score.
 
-7. **Training:** Fit the model with the best parameters found on the training data.
+7. **Training:** Next, we fit the model with the best parameters found on the training data.
 
 8. **Evaluation:** Tested the trained model on the unseen test data, then reported conclusions.
+
+**Variables used in Final Model to Classify 'health_rating'**
+- 'calories_per_minute'
+- 'sugar_protein_ratio'
+- 'minutes'
+- 'n_steps'
+- 'description'
+- 'nutrition' ('calories', 'total_fat_PDV', 'sugar_PDV', 'sodium_PDV', 'protein_PDV', 'saturated_fat_PDV', 'carbohydrates_PDV')
+
+```py
+                    precision recall  f1-score   support
+
+       healthy       0.73      0.62      0.67      9707
+medium healthy       0.25      0.35      0.29      3167
+     unhealthy       0.49      0.51      0.50      3838
+
+      accuracy                           0.55     16712
+     macro avg       0.49      0.50      0.49     16712
+  weighted avg       0.58      0.55      0.56     16712
+```
+
 
 **Overall F1 Macro: 0.4884**
 
 **Overall F1 Weighted: 0.5605**
-
 
 ### Analysis
 1. **Improved Balance on Minority Classes:**
@@ -414,36 +442,37 @@ We decided to conduct a model to test the accuracy across different types od cui
 ### Procedure
 
 1. **Model Prediction on Test Set**
-    Used the trained model (best_model) to predict labels (y_pred) on the test dataset features (X_test).
+First we used the trained model (best_model) to predict labels (y_pred) on the test dataset features (X_test).
 
 2. **Augment Test DataFrame with True and Predicted Labels**
-    - Added two new columns to the test DataFrame (df_test):
-        - y_true: the actual true labels from y_test
-        - y_pred: the predicted labels from the model
+   Next we added two new columns to the test DataFrame (df_test):
+    - y_true: the actual true labels from y_test
+    - y_pred: the predicted labels from the model
 
 3. **Define Group Metric Function**
-    Created a function that calculated a chosen performance metric (here, the macro F1-score) on any subset of the data. This function took a DataFrame for a single group and returned the group's metric score.
+Then we created a function that calculated a chosen performance metric (here, the macro F1-score) on any subset of the data. This function took a DataFrame for a single group and returned the group's metric score.
 
 4. **Calculate Metric per Cuisine Group**
-    Grouped df_test by the categorical variable cuisine_group and applied the metric function to each group to get performance scores per cuisine.
+Then we grouped df_test by the categorical variable cuisine_group and applied the metric function to each group to get performance scores per cuisine.
 
 5. **Display Performance Results by Group**
-    Vizualized the metric scores to identify disparities in model accuracy or predictive power across different cuisine groups.
+Next we vizualized the metric scores to identify disparities in model accuracy or predictive power across different cuisine groups.
 
 6. **Conduct Pairwise Permutation Tests**
-    For each pair of cuisine groups, we performed a permutation test to determine whether the observed difference in metric scores is statistically significant.
+For each pair of cuisine groups, we performed a permutation test to determine whether the observed difference in metric scores is statistically significant.
 
-   Hypotheses for Fairness Analysis of Cuisine Groups:
-     - Null Hypothesis (H₀):
-         There is no difference in the model’s predictive performance measured by macro F1-score between the two cuisine groups being compared.
-     - Alternative Hypothesis (H₁):
-        There is a significant difference in the model’s predictive performance between the two cuisine groups. The model performs differently for              one cuisine group compared to the other.
+Hypotheses for Fairness Analysis of Cuisine Groups:
+ - **Null Hypothesis**:
+     There is no difference in the model’s predictive performance measured by macro F1-score between the two cuisine groups being compared.
+ - **Alternative Hypothesis**:
+    There is a significant difference in the model’s predictive performance between the two cuisine groups. The model performs differently for              one cuisine group compared to the other.
     
-    The permutation test involved:
-        - Combining data from the two groups.
-        - Randomly shuffling group labels many times (e.g., 1000 permutations).
-        - Calculating metric differences for each shuffle.
-        - Comparing the observed metric difference to the permutation distribution to compute a p-value.
+The permutation test involved:
+    - Combining data from the two groups.
+    - Randomly shuffling group labels many times (e.g., 1000 permutations).
+    - Calculating metric differences for each shuffle.
+    - Comparing the observed metric difference to the permutation distribution to compute a p-value.
+
 ### Results
 
 | Comparison           | Difference | P-value | Interpretation                                                                 |
