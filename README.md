@@ -177,7 +177,7 @@ The missingness of rating depends on the health_score of the recipe. In other wo
   frameborder="0"
 ></iframe>
 
-<img src="assets/minutes__missing_hist.png" width="800" />
+<img src="assets/minutes_missing_hist.png" width="800" />
 
 #### Results
 **Observed Difference: 51.4524**
