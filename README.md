@@ -385,21 +385,32 @@ Here is a chart we used to decide which features to use for our final model:
 3. **Train-Test Split:** Next, we split the dataset into training and testing subsets, making sure the distribution of health rating classes was similar in both sets by stratifying the split.
 
 4. **Preprocessing Pipeline:** We then applied standard scaling to numeric features so they would on comparable scales, and converted the recipe descriptions into numerical features using TF-IDF to capture important text patterns.
+   - Numerical:
+       - Selected in numeric_features list
+       - Processed by StandardScaler
+       - Passed into the Random Forest as continuous input features for decision tree splits
+   - Text:
+       - Specified as text_features = 'description'
+       - Processed by TfidfVectorizer with: max_features=200: Keeps top 200 most informative terms
+       - Converts the description into a 200-dimensional vector
+       - F-IDF vectors are passed into the Random Forest as additional features, helping the model capture language cues about healthiness
+   - Target Variable:
+       - Set as the target (y) 
 
-5. **Model Setup:** Next, we used a Random Forest classifier that accounted for class imbalance by weighting classes inversely to their frequency, improving prediction fairness across classes.
+6. **Model Setup:** Next, we used a Random Forest classifier that accounted for class imbalance by weighting classes inversely to their frequency, improving prediction fairness across classes.
 
-6. **Hyperparameter Tuning:** Then we ran a grid search with cross-validation over various Random Forest parameters (like number of trees, tree depth, etc.) to find the best combination that maximized macro F1 score.
+7. **Hyperparameter Tuning:** Then we ran a grid search with cross-validation over various Random Forest parameters (like number of trees, tree depth, etc.) to find the best combination that maximized macro F1 score.
 
-7. **Training:** Next, we fit the model with the best parameters found on the training data.
+8. **Training:** Next, we fit the model with the best parameters found on the training data.
 
-8. **Evaluation:** Tested the trained model on the unseen test data, then reported conclusions.
+9. **Evaluation:** Tested the trained model on the unseen test data, then reported conclusions.
 
 **Variables used in Final Model to Classify 'health_rating'**
-- 'calories_per_minute'
-- 'sugar_protein_ratio'
-- 'minutes'
-- 'n_steps'
-- 'description'
+- 'calories_per_minute': calories / (minutes + 1), this measures calorie density over time — high values might mean high-calorie, quick recipes
+- 'sugar_protein_ratio': sugar_PDV / (protein_PDV + 1), high values suggest sweet but low-protein recipes — could indicate desserts or snacks
+- 'minutes': Time (in minutes) to make the recipe, can reflect complexity or convenience
+- 'n_steps': Number of cooking steps, can indicate complexity or convenience
+- 'description': text that contains a short summary or blurb about the recipe, gives the model natural-language clues about the healthiness of a recipe
 - 'nutrition' ('calories', 'total_fat_PDV', 'sugar_PDV', 'sodium_PDV', 'protein_PDV', 'saturated_fat_PDV', 'carbohydrates_PDV')
 
 ```py
