@@ -146,6 +146,8 @@ We moved on to examine the missingness of 'rating' in the merged DataFrame by te
   frameborder="0"
 ></iframe>
 
+<img src="assets/health_score_missingness.png" width="800" />
+
 #### Results
 **Observed Difference: 19.6667**
 The absolute difference between the average health scores of recipes with missing ratings and recipes with ratings present is about 19.67. This is a pretty big difference, indicating that the two groups differ substantially in their health scores.
@@ -174,6 +176,8 @@ The missingness of rating depends on the health_score of the recipe. In other wo
   height="600"
   frameborder="0"
 ></iframe>
+
+<img src="assets/minutes__missing_hist.png" width="800" />
 
 #### Results
 **Observed Difference: 51.4524**
@@ -287,7 +291,7 @@ While the model performs reasonably well for predicting “healthy” recipes (p
 We consider this a reasonable but not strong baseline. It shows that nutritional information contains some signal for predicting health rating, but there's substantial room for improvement — potentially by including non-nutritional features (e.g., ingredients, preparation methods) or applying more sophisticated models or oversampling methods to address imbalance.
 
 ## Final Model
-Here is a chart that helped us decide which features to use for our final model
+Here is a chart we used to decide which features to use for our final model:
 
 | Feature | Type | Info at Submission Time? | Correlated with Nutrition? |
 | ------- | ---- | ------------------------ | -------------------------- |
@@ -302,29 +306,19 @@ Here is a chart that helped us decide which features to use for our final model
 
 1. **Feature Engineering:** Creates two new features — **calories per minute** (how many calories per minute it takes to prepare the recipe) and **sugar-to-protein ratio** (a measure comparing sugar to protein content) — to provide more meaningful signals for the model.
 
-2. **Data Preparation:** Selects the relevant columns including numeric nutrition values, recipe details, and the health rating label; then removes any rows with missing data to ensure clean input.
+2. **Data Preparation:** We selected the relevant columns including numeric nutrition values, recipe details, and the health rating label; then removed any rows with missing data to ensure clean input.
 
-3. **Train-Test Split:** Splits the dataset into training and testing subsets, making sure the distribution of health rating classes is similar in both sets by stratifying the split.
+3. **Train-Test Split:** Split the dataset into training and testing subsets, making sure the distribution of health rating classes was similar in both sets by stratifying the split.
 
-4. **Preprocessing Pipeline:** Applies standard scaling to numeric features so they’re on comparable scales, and converts the recipe descriptions into numerical features using TF-IDF vectorization to capture important text patterns.
+4. **Preprocessing Pipeline:** Applied standard scaling to numeric features so they would on comparable scales, and converted the recipe descriptions into numerical features using TF-IDF to capture important text patterns.
 
-5. **Model Setup:** Uses a Random Forest classifier that accounts for class imbalance by weighting classes inversely to their frequency, improving prediction fairness across classes.
+5. **Model Setup:** Used a Random Forest classifier that accounted for class imbalance by weighting classes inversely to their frequency, improving prediction fairness across classes.
 
-6. **Hyperparameter Tuning:** Runs a grid search with cross-validation over various Random Forest parameters (like number of trees, tree depth, etc.) to find the best combination that maximizes macro F1 score.
+6. **Hyperparameter Tuning:** Ran a grid search with cross-validation over various Random Forest parameters (like number of trees, tree depth, etc.) to find the best combination that maximized macro F1 score.
 
-7. **Training:** Fits the model with the best parameters found on the training data.
+7. **Training:** Fit the model with the best parameters found on the training data.
 
-8. **Evaluation:** Tests the trained model on the unseen test data, then reports precision, recall, and F1 scores for each class, along with overall macro and weighted F1 scores to assess performance across all classes.
-
-### Results
-|                | precision | recall | f1-score | support |
-|----------------|-----------|--------|----------|---------|
-| healthy        | 0.73      | 0.62   | 0.67     | 9707    |
-| medium healthy | 0.25      | 0.35   | 0.29     | 3167    |
-| unhealthy      | 0.49      | 0.51   | 0.50     | 3838    |
-| **accuracy**       |           |        | 0.55     | 16712   |
-| macro avg      | 0.49      | 0.50   | 0.49     | 16712   |
-| weighted avg   | 0.58      | 0.55   | 0.56     | 16712   |
+8. **Evaluation:** Tested the trained model on the unseen test data, then reported conclusions.
 
 **Overall F1 Macro: 0.4884**
 
