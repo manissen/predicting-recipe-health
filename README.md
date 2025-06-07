@@ -379,10 +379,30 @@ We decided to conduct a model to test the accuracy across different types od cui
         - Randomly shuffling group labels many times (e.g., 1000 permutations).
         - Calculating metric differences for each shuffle.
         - Comparing the observed metric difference to the permutation distribution to compute a p-value.
-
 ### Results
 
 The model showed unequal performance, doing worse on Latin cuisine compared to Western and African cuisines with statistically significant gaps. This indicates potential fairness issues that might disadvantage users interested in Latin cuisine recipes. The other cuisine groups have more comparable model performance. This analysis highlights performance gaps in the recipe health prediction model, showing it performs less well on Latin cuisine compared to others. While moderate, these differences raise fairness concerns that may affect user trust and experience, especially for underrepresented groups.
+
+<iframe
+  src="assets/west_latin.html"
+  width="800"
+  height="600"
+  frameborder="0"
+></iframe>
+
+<iframe
+  src="assets/east_latin.html"
+  width="800"
+  height="600"
+  frameborder="0"
+></iframe>
+
+<iframe
+  src="assets/african_latin.html"
+  width="800"
+  height="600"
+  frameborder="0"
+></iframe>
 
 ### PROJECT CONCLUSION THANKS CHAT
 
