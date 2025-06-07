@@ -286,11 +286,68 @@ While the model performs reasonably well for predicting “healthy” recipes (p
 
 We consider this a reasonable but not strong baseline. It shows that nutritional information contains some signal for predicting health rating, but there's substantial room for improvement — potentially by including non-nutritional features (e.g., ingredients, preparation methods) or applying more sophisticated models or oversampling methods to address imbalance.
 
-Creating a linear regression model of the health_scores may have been a more accurate and valid model because of its more defined bins.
-
 ## Final Model
+Here is a chart that helped us decide which features to use for our final model
 
-(include chart that chat made that mieko sent me)
+| Feature | Type | Info at Submission Time? | Correlated with Nutrition? |
+| ------- | ---- | ------------------------ | -------------------------- |
+| Name | Text | Yes | Probably Not | 
+| submitted | Date | Yes | Maybe (trends over time) |
+| minutes | Numeric | Yes | Maybe (short = simple) |
+| n_steps | Numeric | Yes | Maybe (complexity) |
+| tags | List of strings | Yes | Yes (i.e. 'low-fat') |
+| health_rating | Categorical | Yes | Yes (based on tags) |
+| health_rating_num | Numeric version | Yes | Yes |
+| rating, review, user_id, recipe_id, date | Metadata | No, after submission | No (invalid for prediction) |
+
+1. **Feature Engineering:** Creates two new features — **calories per minute** (how many calories per minute it takes to prepare the recipe) and **sugar-to-protein ratio** (a measure comparing sugar to protein content) — to provide more meaningful signals for the model.
+
+2. **Data Preparation:** Selects the relevant columns including numeric nutrition values, recipe details, and the health rating label; then removes any rows with missing data to ensure clean input.
+
+3. **Train-Test Split:** Splits the dataset into training and testing subsets, making sure the distribution of health rating classes is similar in both sets by stratifying the split.
+
+4. **Preprocessing Pipeline:** Applies standard scaling to numeric features so they’re on comparable scales, and converts the recipe descriptions into numerical features using TF-IDF vectorization to capture important text patterns.
+
+5. **Model Setup:** Uses a Random Forest classifier that accounts for class imbalance by weighting classes inversely to their frequency, improving prediction fairness across classes.
+
+6. **Hyperparameter Tuning:** Runs a grid search with cross-validation over various Random Forest parameters (like number of trees, tree depth, etc.) to find the best combination that maximizes macro F1 score.
+
+7. **Training:** Fits the model with the best parameters found on the training data.
+
+8. **Evaluation:** Tests the trained model on the unseen test data, then reports precision, recall, and F1 scores for each class, along with overall macro and weighted F1 scores to assess performance across all classes.
+
+9. **Results**
+    | | precision | recall | f1-score | support |
+    |-| --------- | ------ | -------- | ------- |
+    | healthy | 0.73 | 0.62 | 0.67 | 9707 |
+    | medium healthy | 0.25 | 0.35 | 0.29 | 3167 |
+    | unhealthy | 0.49 | 0.51 | 0.50 | 3838 |
+    ||||||
+    | accuracy | | | 0.55 | 16712 |
+    | macro avg | 0.49 | 0.50 | 0.49 | 16712 |
+    | weighted avg | 0.58 | 0.55 | 0.56 | 16712 |
+
+**Overall F1 Macro: 0.4884**
+**Overall F1 Weighted: 0.5605**
+
+10. **Comparison Table**
+
+### Analysis
+1. **Improved Balance on Minority Classes:**
+    The final model significantly improves recall and F1-score for the “medium healthy” class (Recall 0.35 vs. 0.04; F1 0.29 vs. 0.07), which was very poorly detected by the baseline. This shows the final model is much better at recognizing this previously underrepresented category.
+2. **Better Recall on "Unhealthy":**
+    Recall for the "unhealthy" class also improved (0.51 vs. 0.40), meaning the final model catches more true "unhealthy" cases.
+3. **Tradeoff with Healthy Class:**
+    Although the baseline model had a much higher recall for the “healthy” class (0.90 vs. 0.62), the final model has better precision here (0.73 vs. 0.65), suggesting fewer false positives when predicting "healthy." This reflects a shift toward more balanced predictions rather than over-predicting the majority class.
+4. **Slightly Lower Accuracy but More Meaningful:**
+    The final model’s accuracy decreased (0.55 vs. 0.62), but accuracy can be misleading when classes are imbalanced. The final model’s improvements in minority classes and balanced macro F1-score indicate better overall classification quality.
+5. **Overall Macro F1 Improved:**
+    Macro F1-score increased from 0.43 to 0.49, showing better average performance across all classes — especially the minority ones.
+6. **Weighted F1 Stable:**
+    Weighted F1 remains about the same (~0.56), meaning the final model maintains similar overall weighted performance while improving fairness across classes.
+
+### Conclusion
+The final model is better because it addresses the key weakness of the baseline: poor detection of “medium healthy” and “unhealthy” classes. It achieves a more balanced classification by improving recall and F1-scores on these minority classes at the cost of some accuracy and recall for the majority “healthy” class. This balance is often preferable in practical scenarios where detecting all categories fairly is important.
 
 ## Fairness Analysis
 
