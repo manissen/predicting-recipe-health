@@ -415,7 +415,7 @@ The model showed unequal performance, doing worse on Latin cuisine compared to W
 ></iframe>
 
 <iframe
-  src="assets/african_latin.html"
+  src="assets/afican_latin.html"
   width="800"
   height="600"
   frameborder="0"
