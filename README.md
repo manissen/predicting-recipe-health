@@ -515,7 +515,7 @@ The model showed unequal performance, doing worse on Latin cuisine compared to W
   height="600"
   frameborder="0"
 ></iframe>
-### PROJECT CONCLUSION
+## Project Conclusion
 
 This project developed a robust classification model to predict recipe health ratings by combining nutritional, preparation, and textual features with engineered metrics such as calories per minute and sugar-to-protein ratio. Using a Random Forest classifier with careful hyperparameter tuning and balanced class weights, the final model demonstrated solid overall predictive performance, reflected in strong macro and weighted F1 scores.
 However, fairness analysis revealed disparities in model accuracy across cuisine groups, with notably lower performance on Latin cuisine recipes. These results highlight the need to address data imbalance and model bias to ensure equitable predictions for diverse culinary traditions. Users should be mindful of these limitations when applying the model and consider supplementing predictions with domain knowledge, especially for underrepresented cuisine types.
