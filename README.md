@@ -160,7 +160,7 @@ Our final DataFrame has 83,628 rows and 20 columns. Here's a sample row:
 ---
 
 ### Univariate Analysis
-This histogram shows the distribution of 'health_score' with the outliers removed. The lower the health score, the better. This plot helps the users understand the scale of the scores which will be useful when interpreting the rest of the analysis. The mean of the data is **97.712** and and the median health score is **64.999**. The distribution is skewed right histogram, so a higher proportion of recipes are on the healthier end of the scale.
+This histogram shows the distribution of 'health_score' with the outliers removed. **Low health scores mean healthier recipes**. This plot helps the users understand the scale of the scores which will be useful when interpreting the rest of the analysis. The mean of the data is **97.712** and and the median health score is **64.999**. The distribution is skewed right histogram, so a higher proportion of recipes are on the healthier end of the scale.
 
 <iframe
   src="assets/univariate_health_scores.html"
@@ -208,12 +208,15 @@ Next we will examine the missingness of 'rating' in the merged DataFrame by test
 
 #### Results
 **Observed Difference: 19.6667**
+
 The absolute difference between the average health scores of recipes with missing ratings and recipes with ratings present is about 19.67. This is a pretty big difference, indicating that the two groups differ substantially in their health scores.
 
 **P-value: 0.0000**
+
 The p-value is effectively 0 (or very close to zero). This means it is extremely unlikely that such a large difference in health scores between missing and non-missing ratings would happen by random chance if missingness were truly independent of health score.
 
 **Interpretation:**
+
 Since the p-value is much smaller than the significance level (0.05), we reject the null hypothesis and conclude:
 
 The missingness of 'rating' depends on the 'health_score' of the recipe. Whether a recipe’s rating is missing is related to how healthy that recipe is. This suggests 'rating' is Missing At Random (MAR) rather than Missing Completely At Random (MCAR).
@@ -241,12 +244,15 @@ Next we will analyze if the missingness of 'rating' depends on the 'minutes' a r
 
 #### Results
 **Observed Difference: 51.4524**
+
 On average, the difference in minutes between recipes with and without missing ratings is ~51 minutes.
 
 **P-value: 0.1040**
+
 This is the probability of seeing a difference this large (or larger) just by random chance if the null hypothesis were true.
 
 **Interpretation:**
+
 Since p-value (0.1040) > significance level (0.05), we fail to reject the null hypothesis. We do not have statistically significant evidence that the missingness in rating depends on minutes. Although there's a noticeable average time difference between recipes with and without ratings, there's not enough statistical evidence to say that recipe duration (minutes) explains why ratings are missing.
 
 ## Hypothesis Testing 
@@ -363,6 +369,8 @@ While the model performs reasonably well for predicting “healthy” recipes (p
 We consider this a reasonable but not strong baseline. It shows that nutritional information contains some insight for predicting health rating, but there's substantial room for improvement — potentially by including non-nutritional features (e.g., description, minutes) or applying more complex models or methods to address imbalance.
 
 ## Final Model
+In our final model, we made a classification model to determine their health rating (either healthy, medium healthy, or unhealthy), based on the nutrition values in the nutrition column.
+
 Here is a chart we used to decide which features to use for our final model:
 
 | Feature | Type | Info at Submission Time? | Correlated with Nutrition? |
@@ -437,7 +445,7 @@ medium healthy       0.25      0.35      0.29      3167
 The final model is better because it addresses the key weakness of the baseline: poor detection of “medium healthy” and “unhealthy” classes. It achieves a more balanced classification by improving recall and F1-scores on these minority classes at the cost of some accuracy and recall for the majority “healthy” class. This balance is often preferable in practical scenarios where detecting all categories fairly is important.
 
 ## Fairness Analysis
-We decided to conduct a model to test the accuracy across different types od cuisine using the 'tags' column of the dataframe.
+We decided to conduct a model to test the accuracy across different types of cuisine using the 'tags' column of the dataframe.
 
 ### Procedure
 
