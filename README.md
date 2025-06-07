@@ -58,13 +58,72 @@ There are more ratings than recipes because some recipes have multiple ratings, 
 
 5. **Created `health_rating` column**:
     - Based on tags categorized into "healthy", "medium healthy", and "unhealthy":
+    - Assigning weights to a curated list of keywords: +2 for healthy-related tags, +1 for moderately healthy, and -2 for unhealthy tags.
+    - Parsing each recipe’s tags column from a string to a list (using ast.literal_eval) and computing a total score based on the tag weights.
+    - Mapping the score to a label: if the score is ≥2 it's "healthy", 0–1 is "medium healthy", and <0 is "unhealthy". This result is stored in a new column called health_rating.
 
     ```py
-    healthy_keywords = {'healthy-2', 'healthy', 'salads', 'chard', 'vegan', 'very-low-carbs', 'vegetarian', 'high-fiber', 'spinach', 'low-carb', 'low-sodium', 'low-calorie', 'vegetables', 'low-fat', 'low-saturated-fat'}
-    midhealthy_keywords = {'high-protein', 'pork-sausage', 'smoothies', 'desserts-fruit', 'low-in-something', 'pot-pie', 'dairy-free', 'gluten-free', 'casseroles', 'tex-mex'}
-    unhealthy_keywords = {'drop-cookies', 'desserts', 'super-bowl', 'brownies', 'cakes', 'cake-fillings-and-frostings', 'fudge', 'rolled-cookies', 'cookies-and-brownies', 'cupcakes', 'desserts-easy', 'pies-and-tarts', 'sugar-cookies', 'fillings-and-frostings-chocolate', 'chocolate-chip-cookies', 'ice-cream'}
+    healthy_keywords = {
+    'apples', 'artichoke', 'asparagus', 'avocado', 'bananas', 'berries', 'black-beans',
+    'blueberries', 'bok-choys', 'broccoli', 'brown-rice', 'cabbage', 'carrots', 'cauliflower',
+    'chard', 'cherries', 'chick-peas-garbanzos', 'citrus', 'collard-greens', 'coconut',
+    'corn', 'cranberry-sauce', 'cucumber', 'dates', 'dairy-free', 'diabetic', 'eggplant',
+    'eggs', 'fruit', 'gluten-free', 'grapes', 'greens', 'high-fiber', 'high-protein', 'kiwifruit',
+    'lentils', 'lettuces', 'low-calorie', 'low-carb', 'low-cholesterol', 'low-fat',
+    'low-saturated-fat', 'low-sodium', 'mango', 'melons', 'mushrooms', 'nuts', 'oatmeal',
+    'orange', 'papaya', 'pears', 'peppers', 'pineapple', 'plums', 'pumpkin', 'raspberries',
+    'salads', 'salmon', 'spinach', 'strawberries', 'sweet-potatoes', 'tomatoes', 'tropical-fruit',
+    'turkey', 'vegan', 'vegetables', 'vegetarian', 'very-low-carbs', 'zucchini'
+    }
+    midhealthy_keywords = {
+    'african', 'american', 'amish-mennonite', 'argentine', 'asian', 'australian', 'austrian', 'baja',
+    'baking', 'bean-soup', 'beans', 'breakfast', 'breakfast-casseroles', 'british-columbian',
+    'cajun', 'cambodian', 'camping', 'canadian', 'canning', 'caribbean', 'casseroles', 'chicken',
+    'chicken-breasts', 'chicken-stew', 'chinese', 'comfort-food', 'cooking-mixes', 'cuban',
+    'curries', 'danish', 'dinner-party', 'dips', 'dips-lunch-snacks', 'ecuadorean', 'eggs-dairy',
+    'english', 'ethiopian', 'european', 'filipino', 'french', 'freshwater-fish', 'frozen-desserts',
+    'fruit', 'german', 'gluten-free', 'greek', 'grilling', 'hawaiian', 'heirloom-historical',
+    'high-in-something', 'holiday-event', 'hungarian', 'indian', 'indonesian', 'irish', 'italian',
+    'japanese', 'jewish-ashkenazi', 'jewish-sephardi', 'kid-friendly', 'korean', 'kosher', 'laotian',
+    'lebanese', 'libyan', 'low-in-something', 'macaroni-and-cheese', 'malaysian', 'mardi-gras-carnival',
+    'mexican', 'middle-eastern', 'midwestern', 'mongolian', 'moroccan', 'mothers-day', 'muffins',
+    'native-american', 'nepalese', 'new-years', 'new-zealand', 'nigerian', 'non-alcoholic',
+    'north-american', 'northeastern-united-states', 'norwegian', 'oaxacan', 'pakistani',
+    'palestinian', 'pasta', 'peruvian', 'philippine', 'picnic', 'polish', 'polynesian',
+    'puerto-rican', 'quiche', 'quick-breads', 'ramadan', 'russian', 'salad-dressings', 'salads',
+    'saudi-arabian', 'scandinavian', 'seafood', 'seasonal', 'simply-potatoes', 'snacks',
+    'south-african', 'south-american', 'southwestern-united-states', 'spanish', 'spinach',
+    'spring', 'swedish', 'thai', 'thanksgiving', 'tilapia', 'turkish', 'valentines-day', 'veggie-burgers',
+    'vietnamese', 'weeknight', 'welsh', 'white-rice', 'wild-game', 'winter', 'yams-sweet-potatoes'
+    }
+    unhealthy_keywords = {
+    'bacon', 'bar-cookies', 'barbecue', 'bear', 'beef', 'beef-barley-soup', 'beef-crock-pot',
+    'beef-kidney', 'beef-liver', 'beef-organ-meats', 'beef-ribs', 'beef-sausage', 'birthday',
+    'biscotti', 'biscuits', 'bread-pudding', 'bread', 'brownies', 'burgers', 'cake-fillings-and-frostings',
+    'cakes', 'candy', 'cheese', 'cheesecake', 'chocolate', 'chocolate-chip-cookies', 'cocktails',
+    'coffee-cakes', 'cookies-and-brownies', 'cupcakes', 'deep-fry', 'desserts', 'desserts-easy',
+    'desserts-fruit', 'drop-cookies', 'fudge', 'gelatin', 'gifts', 'ham', 'ham-and-bean-soup',
+    'hand-formed-cookies', 'halloween-cakes', 'halloween-cupcakes', 'ice-cream', 'jams-and-preserves',
+    'jellies', 'macaroni-and-cheese', 'marinades-and-rubs', 'mashed-potatoes', 'meat', 'meatballs',
+    'meatloaf', 'microwave', 'muffins', 'nachos', 'oamc-freezer-make-ahead', 'oven', 'pancakes-and-waffles',
+    'pastry', 'peanut-butter', 'pies', 'pies-and-tarts', 'pizza', 'popcorn', 'pork', 'pork-chops',
+    'pork-crock-pot', 'pork-loin', 'pork-ribs', 'pork-sausage', 'pot-roast', 'potatoes', 'pressure-cooker',
+    'puddings-and-mousses', 'punch', 'quebec', 'quick-breads', 'reynolds-wrap', 'roast-beef',
+    'roast-beef-comfort-food', 'roast-beef-main-dish', 'rolled-cookies', 'rolls-biscuits',
+    'savory-pies', 'savory-sauces', 'scones', 'short-grain-rice', 'sugar-cookies', 'super-bowl',
+    'superbowl', 'sweet', 'sweet-sauces', 'tarts', 'toddler-friendly', 'tuna', 'turkey-burgers',
+    'whitefish', 'yeast'
+    }
     ```
-6. **Computed `health_score` column**:
+    The resulting column `health_rating` is distrubuted:
+   ```py
+    health_rating
+    healthy           48567
+    unhealthy         19208
+    medium healthy    15853
+    Name: count, dtype: int64
+   ```
+7. **Computed `health_score` column**:
     - Weighted nutritional values to quantify health:
 
     | Nutritional Fact         | Impact |
@@ -79,7 +138,7 @@ There are more ratings than recipes because some recipes have multiple ratings, 
 
     - Protein gets a negative weight due to its generally positive health impact.
 
-7. **Cretead `health_rating_num` column**:
+8. **Cretead `health_rating_num` column**:
     - It makes a numerical column representing the health ratings
     ```py
     'unknown': 0,
@@ -112,7 +171,7 @@ This histogram shows the distribution of Health Scores with the outliers removed
 ></iframe>
 
 ### Bivariate Analysis
-This box plot shows the distribution of health scores across four health rating categories: healthy, medium healthy, unhealthy, and unknown, with outliers removed. Overall, we see that recipes labeled as healthy tend to have lower health scores (indicating better health), while unhealthy recipes have higher and more variable scores, suggesting a clear trend in health score as health rating decreases (becomes healthier).
+This box plot shows the distribution of health scores across three health rating categories: healthy, medium healthy, and unhealthy with outliers removed. Overall, we see that recipes labeled as healthy tend to have lower health scores (indicating better health), while unhealthy recipes have higher and more variable scores, suggesting a clear trend in health score as health rating decreases (becomes healthier).
 
 <iframe
   src="assets/box_plot_health_scores.html"
