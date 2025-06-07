@@ -317,15 +317,14 @@ Here is a chart that helped us decide which features to use for our final model
 8. **Evaluation:** Tests the trained model on the unseen test data, then reports precision, recall, and F1 scores for each class, along with overall macro and weighted F1 scores to assess performance across all classes.
 
 ### Results
-| | precision | recall | f1-score | support |
-|-| --------- | ------ | -------- | ------- |
-| healthy | 0.73 | 0.62 | 0.67 | 9707 |
-| medium healthy | 0.25 | 0.35 | 0.29 | 3167 |
-| unhealthy | 0.49 | 0.51 | 0.50 | 3838 |
-||||||
-| accuracy | | | 0.55 | 16712 |
-| macro avg | 0.49 | 0.50 | 0.49 | 16712 |
-| weighted avg | 0.58 | 0.55 | 0.56 | 16712 |
+|                | precision | recall | f1-score | support |
+|----------------|-----------|--------|----------|---------|
+| healthy        | 0.73      | 0.62   | 0.67     | 9707    |
+| medium healthy | 0.25      | 0.35   | 0.29     | 3167    |
+| unhealthy      | 0.49      | 0.51   | 0.50     | 3838    |
+| **accuracy**       |           |        | 0.55     | 16712   |
+| macro avg      | 0.49      | 0.50   | 0.49     | 16712   |
+| weighted avg   | 0.58      | 0.55   | 0.56     | 16712   |
 
 **Overall F1 Macro: 0.4884**
 
