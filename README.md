@@ -212,7 +212,7 @@ unhealthy         76.28
 Name: health_score, dtype: float64
 ```
 <iframe
-  src="assets/health_score_dist_by_missingness.html"
+  src="assets/health_score_perm.html"
   width="800"
   height="600"
   frameborder="0"
