@@ -123,7 +123,7 @@ There are more ratings than recipes because some recipes have multiple ratings, 
     medium healthy    15853
     Name: count, dtype: int64
    ```
-7. **Computed `health_score` column**:
+6. **Computed `health_score` column**:
     - Weighted nutritional values to quantify health:
 
     | Nutritional Fact         | Impact |
@@ -138,25 +138,24 @@ There are more ratings than recipes because some recipes have multiple ratings, 
 
     - Protein gets a negative weight due to its generally positive health impact.
 
-8. **Cretead `health_rating_num` column**:
+7. **Created `health_rating_num` column**:
     - It makes a numerical column representing the health ratings
     ```py
-    'unknown': 0,
-    'healthy': 1,
-    'medium healthy': 2,
-    'unhealthy': 3
+    'healthy': 0,
+    'medium healthy': 1,
+    'unhealthy': 2
     ```
 
-7. **Grouped by recipe name**:
+8. **Grouped by recipe name**:
     - Prevented duplicate recipe names from skewing the results.
   
 ---
 
 Our final DataFrame has 83,628 rows and 20 columns. Here's a sample row:
 
-| name | id | tags | nutrition| n_ingredients | rating | avg_rating | difficulty | health_rating | health_score |
+| name | minutes | tags | nutrition| n_steps | rating | avg_rating | health_rating | health_score |
 |------|----|------|----------|---------------|--------|------------|------------|---------------|--------------|
-| 0 carb 0 cal gummy worms | 45 | [...] | [384.7, 0.0, 0.0, ...]| 3 | 5 | 4.75 | intermediate | unhealthy | 33.5 |
+| 0 carb 0 cal gummy worms | 45 | [...] | [384.7, 0.0, 0.0, ...]| 3 | 5 | 4.75 | unhealthy | 33.5 |
 
 ---
 
